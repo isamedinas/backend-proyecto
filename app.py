@@ -9,6 +9,7 @@ from routes.usuarios import usuarios_bp
 
 load_dotenv()
 
+
 def create_app():
     app = Flask(__name__)
     init_db(app)
@@ -22,5 +23,9 @@ def create_app():
 
     return app
 
-# esta es la variable que gunicorn usa
+# Crear la app
 app = create_app()
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))  # Render usará el que le toque
+    app.run(host="0.0.0.0", port=port, debug=True)
