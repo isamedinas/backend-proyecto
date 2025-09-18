@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from config.db import get_db_connection
+from routes import get_db_connection
 
 #Blueprint
 tareas_bp = Blueprint('tareas', __name__)
