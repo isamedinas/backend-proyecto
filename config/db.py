@@ -1,30 +1,35 @@
-from flask_mysqldb import MySQL
+from flask_mysql_connector import MySQL
 import os
 from dotenv import load_dotenv
 
-# Cargar de .env las variables de entorno
+# Cargar variables de entorno desde .env
 load_dotenv()
 
-# Creo una instancia de MySQL
+# Crear instancia de MySQL
 mysql = MySQL()
 
-# Funcion para conecarme a la BD
 def init_db(app):
-    '''Configuramos la base de datos con la instancia de Flask'''
-    app.config['MYSQL_HOST']= os.getenv("DB_HOST")
-    app.config['MYSQL_USER']= os.getenv("DB_USER")
-    app.config['MYSQL_PASSWORD']= os.getenv("DB_PASSWORD")
-    app.config['MYSQL_DB']= os.getenv("DB_NAME")
-    app.config['MYSQL_PORT']= int(os.getenv("DB_PORT"))
+    """
+    Configura la conexión a la base de datos MySQL
+    usando las variables de entorno definidas en Railway.
+    """
+    app.config['MYSQL_HOST'] = os.getenv("DB_HOST", "localhost")
+    app.config['MYSQL_USER'] = os.getenv("DB_USER", "root")
+    app.config['MYSQL_PASSWORD'] = os.getenv("DB_PASSWORD", "")
+    app.config['MYSQL_DATABASE'] = os.getenv("DB_NAME", "mi_base")
+    app.config['MYSQL_PORT'] = int(os.getenv("DB_PORT", 3306))
 
-    # Inicializamos la conexion
+    # Inicializamos la conexión
     mysql.init_app(app)
 
-# Definimos el cursor
+
 def get_db_connection():
-    """Regresa el cursos para interacuar con la base de datos"""
+    """
+    Devuelve un cursor activo para interactuar con la base de datos.
+    """
     try:
         connection = mysql.connection
-        return connection.cursor()
+        cursor = connection.cursor(dictionary=True)  # Devuelve resultados como diccionarios
+        return cursor
     except Exception as e:
         raise RuntimeError(f"Error al conectar a la base de datos: {e}")
